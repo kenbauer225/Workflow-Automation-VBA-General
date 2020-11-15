@@ -1,0 +1,37 @@
+Sub grab_files()
+
+'----------
+'1) Create New Workbook
+'2) Determine cell as Input Cell for Folder Path input, arbitrarily assigned to D4 for the purposes of this program
+'3) Determine column header for file list to output directly below, arbitrarily assigned to D6 for the purposes of this program
+'4) When workbook is setup, add this code to a new or existing module. Run when folder path input is appropriately provided.
+'----------
+
+'Variable Declaration
+Dim file_system_object As Object
+Dim target_folder As Object
+Dim target_file As Object
+Dim i As Integer, mypath As String
+
+'Clear Output Range - assumes <10,000 files in folder
+Range("D7:D10000").ClearContents
+
+'Set File System Object
+Set file_system_object = CreateObject("Scripting.FileSystemObject")
+
+'Grab Folder Path
+mypath = Range("D4").Value
+
+'Set Target Folder
+Set target_folder = file_system_object.GetFolder(mypath)
+
+'Loop Thourgh Files, Output into Designated Range
+i = i
+For Each target_file In target_folder.Files
+  Range("D6").Offset(i,0) = target_file.Name
+  i = i + 1
+Next target_file
+
+End sub
+
+
