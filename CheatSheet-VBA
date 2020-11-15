@@ -1,0 +1,75 @@
+'Kenneth Bauer Personal VBA CheatSheet/ScrapSheet
+'Not intended to be an executable
+
+'Go To ShortCuts 
+'Alt F11, Alt F8, Alt LR x2
+'F8 step through + CTRL G (Immediate Window): Debug.Print myVar, include breakpoints
+
+'Key Application Adjustments & Re-Adjustments
+Application.ScreenUpdatin = False/True + Application.DisplayAlerts = False/True
+Application.SendKeys("^{HOME}")/("{PGDN}") 'for ActiveWorkbook.Worksheets.Count (w/ boomerang functionality)
+Application.Calculation = xlCalculationManual/xlCalculationAutomatic; Application.Calculate
+Application.WorksheetFunction.___
+
+'Deliverable Design
+Start of Process -> :: Sheets("Form1").Visible = True -> -> End of Process -> :: Sheets("Form1").Visible = False
+
+'Application PreLoop Checks, where named ranges are specified & max_count previously set
+If Range("myInputRange").Value = "" Then
+  MsgBox ("No Inputs Detected")
+ElseIf Range("InputCount").Value > max_count Then
+  MsgBox ("Input count exceeds specified max count.") 'Model Control - Best Practice
+Else
+  Call main_program
+End If
+
+'Dynamic Range Select: CTRL SHIFT Right Arrow/Down Arrow
+Range(Range("B2"),Range("B2").End(xlDown)).Select
+Range(Selection, Selection.End(xlToRight)).Select
+k = Selection.Rows.Count ... .Columns.Count
+
+'Last Row
+last_row = Rnage("A100000").End(xlUp).Row ... Add an Offset to append to list
+Dim myRange As Range
+Set myRange = Range("A1:A" & last_row)
+
+'User View: Freeze Panes, Zoom
+Range("A8").Select
+ActiveWindow.FreezePanes = True/False
+ActiveWindow.Zoom = 100 -> 50/200/80 etc
+
+'GOTO Macros/SubRoutines -------------------------------------------------------------------------------
+
+'Go Home
+Dim ws As Worksheet 'alternative common var name: xSheet
+For Each ws in ActiveWorkbook.Sheets
+  ws.Activate
+  ws.Range("A1").Select
+Next ws
+
+'Kill Links
+Dim xSheet As Worksheet
+For Each xSheet in ActiveWorkbook.Sheets
+  If xSheet.Name <> "Main" And xSheet.Name <> "Do Not Touch1" And xSheet.Name <> "Do Not Touch_n" Then
+    xSheet.Activate
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial xlPasteValues
+  End If
+Next xSheet
+
+'DropOff/Delete Sheets (Array Method) + Save as new Book
+Sheets(Array("deleteThis","deleteThisToo","andThis")).Delete
+myFolderPath = Range("B2").Value
+myFileName = Range("B3").Value
+ActiveWorkbook.SaveAs myFolderPath & "\" & myFileName, FileFormat:=51
+*then copy and paste placeholder name with ModelControl:: Placeholder
+
+'Clearing Ranges
+Sheets("Main").Range("A1:A15").Clear/.ClearContents/... Conditional Formatting: FormatConditions.Delete ... Clear Data Validation: Validation.Delete
+
+
+
+
+
+
